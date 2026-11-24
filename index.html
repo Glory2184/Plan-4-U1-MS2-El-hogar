@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Diario de Clase - Colegio Montano</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        montanoPrimary: '#1F3C88',
+                        montanoSecondary: '#3F72AF',
+                        montanoAccent: '#F2C94C',
+                        montanoLight: '#F8FAFC',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        [contenteditable="true"] {
+            outline: none;
+            border-bottom: 1px dashed #3F72AF;
+            transition: all 0.2s ease;
+        }
+        [contenteditable="true"]:hover {
+            background-color: rgba(63, 114, 175, 0.05);
+            border-radius: 4px;
+        }
+        [contenteditable="true"]:focus {
+            background-color: rgba(31, 60, 136, 0.08);
+            border-bottom: 2px solid #1F3C88;
+            border-radius: 4px;
+            padding: 0 4px;
+        }
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .print-break {
+                page-break-before: always;
+            }
+            body {
+                background-color: white !important;
+                color: black !important;
+            }
+            .print-all-sections {
+                display: block !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header institucional -->
+    <header class="bg-montanoPrimary text-white shadow-lg no-print">
+        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center space-x-3 mb-4 md:mb-0">
+                <div class="bg-montanoAccent text-montanoPrimary p-3 rounded-xl font-bold text-2xl shadow-inner">
+                    CM
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight">Colegio Montano</h1>
+                    <p class="text-montanoSecondary text-sm text-slate-200">Sistema de Planificación por Competencias</p>
+                </div>
+            </div>
+            <!-- Botones de Acción Globales -->
+            <div class="flex flex-wrap gap-2">
+                <button onclick="guardarDatos()" class="bg-montanoSecondary hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition flex items-center shadow">
+                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+                    Guardar
+                </button>
+                <button onclick="window.print()" class="bg-montanoAccent hover:yellow-500 text-montanoPrimary font-semibold px-4 py-2 rounded-lg text-sm transition flex items-center shadow">
+                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                    Imprimir / PDF
+                </button>
+                <button onclick="resetearDatos()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition flex items-center shadow">
+                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Restablecer
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenedor Principal -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-8 sm:px-6 lg:px-8 space-y-8">
+
+        <!-- Banner impreso exclusivo -->
+        <div class="hidden print:block text-center mb-6 border-b-2 border-montanoPrimary pb-4">
+            <h1 class="text-3xl font-bold text-montanoPrimary">Colegio Montano</h1>
+            <p class="text-sm text-gray-600">Plan Diario de Clase Institucional - Modalidad Presencial</p>
+        </div>
+
+        <!-- 1. DATOS GENERALES DE LA CLASE -->
+        <section class="bg-white rounded-2xl shadow-md p-6 border-t-4 border-montanoPrimary">
+            <h2 class="text-xl font-bold text-montanoPrimary mb-4 flex items-center">
+                <span class="bg-montanoPrimary text-montanoAccent w-7 h-7 rounded-full inline-flex items-center justify-center text-sm mr-2 shadow">1</span>
+                Datos Generales de la Clase
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <span class="font-semibold text-montanoSecondary block">Colegio:</span>
+                    <span id="d-colegio" contenteditable="true" class="text-slate-700 font-medium">Colegio Montano</span>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <span class="font-semibold text-montanoSecondary block">Modalidad:</span>
+                    <span id="d-modalidad" contenteditable="true" class="text-slate-700 font-medium">Presencial</span>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <span class="font-semibold text-montanoSecondary block">Materia:</span>
+                    <span id="d-materia" contenteditable="true" class="text-slate-700 font-medium">Medio Social</span>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <span class="font-semibold text-montanoSecondary block">Tema:</span>
+                    <span id="d-tema" contenteditable="true" class="text-slate-700 font-medium">El cuidado del hogar</span>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <span class="font-semibold text-montanoSecondary block">Grado:</span>
+                    <span id="d-grado" contenteditable="true" class="text-slate-700 font-medium">Segundo Primaria</span>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <span class="font-semibold text-montanoSecondary block">Unidad:</span>
+                    <span id="d-unidad" contenteditable="true" class="text-slate-700 font-medium">1</span>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <span class="font-semibold text-montanoSecondary block">Número de Plan:</span>
+                    <span id="d-numplan" contenteditable="true" class="text-slate-700 font-medium">4</span>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <span class="font-semibold text-montanoSecondary block">Fecha:</span>
+                    <span id="d-fecha" contenteditable="true" class="text-slate-700 font-medium">Febrero-Marzo 2027</span>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <span class="font-semibold text-montanoSecondary block">Docente:</span>
+                    <span id="d-docente" contenteditable="true" class="text-slate-700 font-medium">Gloria Rodriguez</span>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 sm:col-span-2 lg:col-span-3">
+                    <span class="font-semibold text-montanoSecondary block">Duración Total:</span>
+                    <span id="d-duracion" contenteditable="true" class="text-slate-700 font-medium">60 minutos (10m IM + 20m TP + 20m TC + 10m P)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. COMPETENCIA Y LOGRO DE APRENDIZAJE -->
+        <section class="bg-white rounded-2xl shadow-md p-6 border-t-4 border-montanoSecondary">
+            <h2 class="text-xl font-bold text-montanoPrimary mb-4 flex items-center">
+                <span class="bg-montanoSecondary text-white w-7 h-7 rounded-full inline-flex items-center justify-center text-sm mr-2 shadow">2</span>
+                Competencia y Logro de Aprendizaje
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-blue-50/50 p-4 rounded-xl border border-blue-100">
+                    <h3 class="font-semibold text-montanoPrimary mb-2 flex items-center">
+                        <svg class="w-5 h-5 text-montanoAccent mr-1.5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 11H9v-2h2v2zm0-4H9V5h2v4z"/></svg>
+                        Competencia de Aprendizaje
+                    </h3>
+                    <p id="c-competencia" contenteditable="true" class="text-slate-700 text-sm leading-relaxed">
+                        Aplica normas de higiene, orden y conservación en el hogar, valorando la responsabilidad compartida para mantener espacios seguros y saludables.
+                    </p>
+                </div>
+                <div class="bg-amber-50/50 p-4 rounded-xl border border-amber-100">
+                    <h3 class="font-semibold text-montanoPrimary mb-2 flex items-center">
+                        <svg class="w-5 h-5 text-montanoAccent mr-1.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                        Logro de Aprendizaje
+                    </h3>
+                    <p id="c-logro" contenteditable="true" class="text-slate-700 text-sm leading-relaxed">
+                        Al finalizar los 60 minutos, el estudiante identifica las principales acciones de cuidado y orden en el hogar y elabora un plan personal de responsabilidades domésticas con al menos tres acciones prácticas.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3 & 4. COMPETENCIAS A DESARROLLAR Y HÁBITOS MONTANO -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Competencias Clave y Blandas -->
+            <section class="bg-white rounded-2xl shadow-md p-6 border-t-4 border-montanoPrimary">
+                <h2 class="text-xl font-bold text-montanoPrimary mb-4 flex items-center">
+                    <span class="bg-montanoPrimary text-montanoAccent w-7 h-7 rounded-full inline-flex items-center justify-center text-sm mr-2 shadow">3</span>
+                    Competencias a Desarrollar
+                </h2>
+                <div class="space-y-4 text-sm">
+                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                        <span class="font-bold text-montanoPrimary block mb-1">Competencias Clave:</span>
+                        <p id="c-claves" contenteditable="true" class="text-slate-700">
+                            <strong>Resolución de problemas y Trabajo en equipo:</strong> Se evidencian al analizar situaciones cotidianas de desorden o riesgo en el hogar y proponer soluciones prácticas de manera conjunta.
+                        </p>
+                    </div>
+                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                        <span class="font-bold text-montanoPrimary block mb-1">Competencias Blandas:</span>
+                        <p id="c-blandas" contenteditable="true" class="text-slate-700">
+                            <strong>Autonomía y Toma de decisiones:</strong> Se fortalecen cuando el estudiante asume compromisos personales sobre el cuidado y orden de sus espacios cotidianos.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Hábitos Formativos Montano -->
+            <section class="bg-white rounded-2xl shadow-md p-6 border-t-4 border-montanoSecondary">
+                <h2 class="text-xl font-bold text-montanoPrimary mb-4 flex items-center">
+                    <span class="bg-montanoSecondary text-white w-7 h-7 rounded-full inline-flex items-center justify-center text-sm mr-2 shadow">4</span>
+                    Hábitos del Modelo Formativo Montano
+                </h2>
+                <div class="space-y-3 text-sm">
+                    <div class="bg-blue-50/40 p-3 rounded-xl border border-blue-100">
+                        <span class="font-bold text-montanoSecondary block">Hábito 3: Poner primero lo primero</span>
+                        <p id="h-habito1" contenteditable="true" class="text-slate-700 mt-0.5">Se aplica al priorizar las tareas esenciales de orden y seguridad antes del juego o descanso en casa.</p>
+                    </div>
+                    <div class="bg-blue-50/40 p-3 rounded-xl border border-blue-100">
+                        <span class="font-bold text-montanoSecondary block">Hábito 6: Sinergizar</span>
+                        <p id="h-habito2" contenteditable="true" class="text-slate-700 mt-0.5">Se evidencia en el trabajo cooperativo, combinando ideas de los integrantes para crear una propuesta integral de cuidado del hogar.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- 5. SECUENCIA DIDÁCTICA INTERACTIVA (IM - TP - TC - P) -->
+        <section class="bg-white rounded-2xl shadow-md p-6 border-t-4 border-montanoPrimary">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b border-slate-200 pb-4">
+                <div>
+                    <h2 class="text-xl font-bold text-montanoPrimary flex items-center">
+                        <span class="bg-montanoPrimary text-montanoAccent w-7 h-7 rounded-full inline-flex items-center justify-center text-sm mr-2 shadow">5</span>
+                        Secuencia Didáctica Interactiva (60 Minutos)
+                    </h2>
+                    <p class="text-xs text-slate-500 mt-1">Navegue por cada momento didáctico haciendo clic en las pestañas inferiores.</p>
+                </div>
+                <div class="mt-3 sm:mt-0 bg-amber-100 text-montanoPrimary px-3 py-1 rounded-full text-xs font-bold shadow-sm">
+                    Tiempo Total: <span id="span-total-tiempo">60</span> Minutos
+                </div>
+            </div>
+
+            <!-- Pestañas de Navegación Didáctica -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6 no-print">
+                <button onclick="cambiarMomento('im')" id="tab-btn-im" class="p-3 rounded-xl font-semibold text-sm transition text-center border-2 border-montanoPrimary bg-montanoPrimary text-white shadow">
+                    1. IM (10 min)<br><span class="text-xs font-normal opacity-90">Introducción Motivante</span>
+                </button>
+                <button onclick="cambiarMomento('tp')" id="tab-btn-tp" class="p-3 rounded-xl font-semibold text-sm transition text-center border-2 border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100">
+                    2. TP (20 min)<br><span class="text-xs font-normal opacity-70">Trabajo Personal</span>
+                </button>
+                <button onclick="cambiarMomento('tc')" id="tab-btn-tc" class="p-3 rounded-xl font-semibold text-sm transition text-center border-2 border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100">
+                    3. TC (20 min)<br><span class="text-xs font-normal opacity-70">Trabajo Cooperativo</span>
+                </button>
+                <button onclick="cambiarMomento('p')" id="tab-btn-p" class="p-3 rounded-xl font-semibold text-sm transition text-center border-2 border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100">
+                    4. P (10 min)<br><span class="text-xs font-normal opacity-70">Plenaria y Cierre</span>
+                </button>
+            </div>
+
+            <!-- Contenido de los Momentos (En pantalla con pestañas, en impresión se muestran todos) -->
+            <div id="momentos-container" class="space-y-8">
+
+                <!-- INTRODUCCIÓN MOTIVANTE (IM) -->
+                <div id="momento-im" class="momento-panel bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                    <div class="flex justify-between items-center mb-4 border-b border-slate-200 pb-3">
+                        <h3 class="text-lg font-bold text-montanoPrimary flex items-center">
+                            <span class="bg-montanoAccent text-montanoPrimary text-xs px-2.5 py-1 rounded-md font-extrabold mr-2">IM</span>
+                            Introducción Motivante
+                        </h3>
+                        <span class="bg-blue-100 text-montanoPrimary font-bold text-xs px-3 py-1 rounded-full">10 Minutos</span>
+                    </div>
+                    <div class="space-y-4 text-sm">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+                                <span class="font-semibold text-montanoSecondary block">Nombre de la actividad:</span>
+                                <span id="im-nombre" contenteditable="true" class="text-slate-700 font-medium">"El misterio de la habitación desordenada"</span>
+                            </div>
+                            <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+                                <span class="font-semibold text-montanoSecondary block">Propósito:</span>
+                                <span id="im-proposito" contenteditable="true" class="text-slate-700">Activar conocimientos previos y presentar una situación problema sobre el orden y la higiene en el hogar.</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+                            <span class="font-semibold text-montanoSecondary block mb-1">Instrucciones paso a paso (Distribución de 10 min):</span>
+                            <div id="im-instrucciones" contenteditable="true" class="text-slate-700 space-y-1">
+                                <p><strong>Minuto 01-03:</strong> El docente muestra una lámina o proyección de una habitación con objetos fuera de lugar y elementos de aseo dispersos.</p>
+                                <p><strong>Minuto 04-07:</strong> Pregunta generadora: <em>"¿Qué problemas observan en esta imagen y qué riesgos o dificultades puede traer a la familia?"</em> Diálogo guiado.</p>
+                                <p><strong>Minuto 08-10:</strong> Relación de la situación problema con la importancia del cuidado diario del hogar.</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+                                <span class="font-semibold text-montanoSecondary block">Recursos:</span>
+                                <span id="im-recursos" contenteditable="true" class="text-slate-700">Lámina ilustrativa, pizarra y marcadores.</span>
+                            </div>
+                            <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+                                <span class="font-semibold text-montanoSecondary block">Evidencia de participación:</span>
+                                <span id="im-evidencia" contenteditable="true" class="text-slate-700">Participación oral activa y aportes en el análisis de la imagen.</span>
+                            </div>
+                            <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+                                <span class="font-semibold text-montanoSecondary block">Hábito relacionado:</span>
+                                <span id="im-habito" contenteditable="true" class="text-slate-700">Hábito 3: Poner primero lo primero.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TRABAJO PERSONAL (TP) -->
+                <div id="momento-tp" class="momento-panel bg-slate-50 p-6 rounded-2xl border border-slate-200 hidden print:block">
+                    <div class="flex justify-between items-center mb-4 border-b border-slate-200 pb-3">
+                        <h3 class="text-lg font-bold text-montanoPrimary flex items-center">
+                            <span class="bg-montanoAccent text-montanoPrimary text-xs px-2.5 py-1 rounded-md font-extrabold mr-2">TP</span>
+                            Trabajo Personal
+                        </h3>
+                        <span class="bg-blue-100 text-montanoPrimary font-bold text-xs px-3 py-1 rounded-full">20 Minutos</span>
+                    </div>
+                    <div class="space-y-4 text-sm">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+                                <span class="font-semibold text-montanoSecondary block">Propósito:</span>
+                                <span id="tp-proposito" contenteditable="true" class="text-slate-700">Construir y demostrar comprensión individual sobre las acciones de orden, limpieza y seguridad en el hogar.</span>
+                            </div>
+                            <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+                                <span class="font-semibold text-montanoSecondary block">Producto esperado:</span>
+                                <span id="tp-producto" contenteditable="true" class="text-slate-700">Guía individual: "Mi plan personal de cuidado y orden en casa".</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+                            <span class="font-semibold text-montanoSecondary block mb-1">Pasos y distribución de 20 minutos:</span>
+                            <div id="tp-instrucciones" contenteditable="true" class="text-slate-700 space-y-1">
+                                <p><strong>Minuto 11-15:</strong> El docente entrega la hoja de trabajo con viñetas de diferentes espacios del hogar (sala, cocina, dormitorio).</p>
+                                <p><strong>Minuto 16-25:</strong> El estudiante identifica y escribe o dibuja tres acciones específicas que realiza para mantener el orden y la higiene en dichos espacios.</p>
+                                <p><strong>Minuto 26-30:</strong> Revisión y retroalimentación individual por parte del docente para asegurar razonamiento y originalidad.</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+                                <span class="font-semibold text-montanoSecondary block">Recursos:</span>
+                                <span id="tp-recursos" contenteditable="true" class="text-slate-700">Hoja de trabajo impresa, cuaderno, lápiz y crayones.</span>
+                            </div>
+                            <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+                                <span class="font-semibold text-montanoSecondary block">Criterios de seguimiento:</span>
+                                <span id="tp-seguimiento" contenteditable="true" class="text-slate-700">Claridad en las acciones propuestas y pulcritud en la elaboración.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TRABAJO COOPERATIVO (TC) -->
+                <div id="momento-tc" class="momento-panel bg-slate-50 p-6 rounded-2xl border border-slate-200 hidden print:block">
+                    <div class="flex justify-between items-center mb-4 border-b border-slate-200 pb-3">
+                        <h3 class="text-lg font-bold text-montanoPrimary flex items-center">
+                            <span class="bg-montanoAccent text-montanoPrimary text-xs px-2.5 py-1 rounded-md font-extrabold mr-2">TC</span>
+                            Trabajo Cooperativo
+                        </h3>
+                        <span class="bg-blue-100 text-montanoPrimary font-bold text-xs px-3 py-1 rounded-full">20 Minutos</span>
+                    </div>
+                    <div class="space-y-4 text-sm">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+                                <span class="font-semibold text-montanoSecondary block">Propósito:</span>
+                                <span id="tc-proposito" contenteditable="true" class="text-slate-700">Fomentar el intercambio de ideas y la resolución colaborativa de un reto sobre seguridad y limpieza del hogar.</span>
+                            </div>
+                            <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+                                <span class="font-semibold text-montanoSecondary block">Producto final:</span>
+                                <span id="tc-producto" contenteditable="true" class="text-slate-700">Organizador gráfico en parejas: "Reglas de oro para cuidar nuestro hogar".</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+                            <span class="font-semibold text-montanoSecondary block mb-1">Instrucciones y roles (Distribución de 20 min):</span>
+                            <div id="tc-instrucciones" contenteditable="true" class="text-slate-700 space-y-1">
+                                <p><strong>Minuto 31-35:</strong> El docente asigna parejas de trabajo y roles específicos: Coordinador de materiales y Expositor.</p>
+                                <p><strong>Minuto 36-45:</strong> La pareja discute y selecciona tres normas fundamentales de seguridad e higiene para evitar accidentes en casa.</p>
+                                <p><strong>Minuto 46-50:</strong> Elaboran conjuntamente el organizador gráfico con las normas seleccionadas y preparan su presentación.</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+                                <span class="font-semibold text-montanoSecondary block">Recursos:</span>
+                                <span id="tc-recursos" contenteditable="true" class="text-slate-700">Hojas de papel bond, marcadores y tarjetas de casos.</span>
+                            </div>
+                            <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+                                <span class="font-semibold text-montanoSecondary block">Criterios de evaluación cooperativa:</span>
+                                <span id="tc-criterios" contenteditable="true" class="text-slate-700">Participación equitativa, respeto mutuo y efectividad en la propuesta grupal.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PLENARIA Y CIERRE (P) -->
+                <div id="momento-p" class="momento-panel bg-slate-50 p-6 rounded-2xl border border-slate-200 hidden print:block">
+                    <div class="flex justify-between items-center mb-4 border-b border-slate-200 pb-3">
+                        <h3 class="text-lg font-bold text-montanoPrimary flex items-center">
+                            <span class="bg-montanoAccent text-montanoPrimary text-xs px-2.5 py-1 rounded-md font-extrabold mr-2">P</span>
+                            Plenaria y Cierre
+                        </h3>
+                        <span class="bg-blue-100 text-montanoPrimary font-bold text-xs px-3 py-1 rounded-full">10 Minutos</span>
+                    </div>
+                    <div class="space-y-4 text-sm">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+                                <span class="font-semibold text-montanoSecondary block">Propósito:</span>
+                                <span id="p-proposito" contenteditable="true" class="text-slate-700">Socializar resultados, formular conclusiones y verificar el logro de aprendizaje mediante ticket de salida.</span>
+                            </div>
+                            <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+                                <span class="font-semibold text-montanoSecondary block">Evidencia final (Ticket de salida):</span>
+                                <span id="p-evidencia" contenteditable="true" class="text-slate-700">Compromiso personal escrito sobre el cuidado del hogar.</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+                            <span class="font-semibold text-montanoSecondary block mb-1">Pasos y distribución de 10 minutos:</span>
+                            <div id="p-instrucciones" contenteditable="true" class="text-slate-700 space-y-1">
+                                <p><strong>Minuto 51-55:</strong> Dos parejas exponen brevemente sus normas de oro creadas en la fase de trabajo cooperativo.</p>
+                                <p><strong>Minuto 56-58:</strong> El docente consolida las ideas clave resaltando el valor de Sinergizar (Hábito 6) en las labores del hogar.</p>
+                                <p><strong>Minuto 59-60:</strong> Aplicación del ticket de salida: cada estudiante anota una acción que cumplirá en casa y la deposita en la urna del saber.</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+                                <span class="font-semibold text-montanoSecondary block">Recursos:</span>
+                                <span id="p-recursos" contenteditable="true" class="text-slate-700">Tarjetas de ticket de salida y urna institucional.</span>
+                            </div>
+                            <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+                                <span class="font-semibold text-montanoSecondary block">Verificación:</span>
+                                <span id="p-verificacion" contenteditable="true" class="text-slate-700">Revisión rápida de compromisos individuales.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 6. RECURSOS DIDÁCTICOS -->
+        <section class="bg-white rounded-2xl shadow-md p-6 border-t-4 border-montanoSecondary">
+            <h2 class="text-xl font-bold text-montanoPrimary mb-4 flex items-center">
+                <span class="bg-montanoSecondary text-white w-7 h-7 rounded-full inline-flex items-center justify-center text-sm mr-2 shadow">6</span>
+                Recursos Didácticos (Aula Presencial)
+            </h2>
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-sm">
+                <ul id="lista-recursos" contenteditable="true" class="list-disc list-inside space-y-1 text-slate-700">
+                    <li>Cuadernos de trabajo de Medio Social y lápices.</li>
+                    <li>Guías impresas "Plan personal de cuidado y orden".</li>
+                    <li>Pizarra institucional y marcadores de colores.</li>
+                    <li>Hojas de papel bond y tarjetas de casos prácticos.</li>
+                    <li>Urna institucional para tickets de salida.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 7. EVALUACIÓN DEL APRENDIZAJE -->
+        <section class="bg-white rounded-2xl shadow-md p-6 border-t-4 border-montanoPrimary">
+            <h2 class="text-xl font-bold text-montanoPrimary mb-4 flex items-center">
+                <span class="bg-montanoPrimary text-montanoAccent w-7 h-7 rounded-full inline-flex items-center justify-center text-sm mr-2 shadow">7</span>
+                Evaluación del Aprendizaje
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <h3 class="font-bold text-montanoPrimary mb-2 flex items-center">
+                        <span class="bg-montanoAccent text-montanoPrimary text-xs px-2 py-0.5 rounded mr-1">Inicial</span>
+                    </h3>
+                    <p id="eval-inicial" contenteditable="true" class="text-slate-700">
+                        Evaluación diagnóstica mediante análisis de imagen y preguntas generadoras durante la Introducción Motivante (IM).
+                    </p>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <h3 class="font-bold text-montanoPrimary mb-2 flex items-center">
+                        <span class="bg-montanoSecondary text-white text-xs px-2 py-0.5 rounded mr-1">Formativa</span>
+                    </h3>
+                    <p id="eval-formativa" contenteditable="true" class="text-slate-700">
+                        Monitoreo continuo, acompañamiento en el trabajo personal (TP) y observación del trabajo cooperativo (TC).
+                    </p>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <h3 class="font-bold text-montanoPrimary mb-2 flex items-center">
+                        <span class="bg-montanoPrimary text-montanoAccent text-xs px-2 py-0.5 rounded mr-1">Sumativa</span>
+                    </h3>
+                    <p id="eval-sumativa" contenteditable="true" class="text-slate-700">
+                        Evaluación del producto de aprendizaje (Organizador gráfico y guía individual) mediante lista de cotejo con criterios medibles.
+                    </p>
+                </div>
+            </div>
+            <div class="mt-4 bg-blue-50/50 p-4 rounded-xl border border-blue-100 text-sm">
+                <span class="font-bold text-montanoSecondary block mb-1">Retroalimentación y Oportunidad de Mejora:</span>
+                <p id="eval-retro" contenteditable="true" class="text-slate-700">
+                    Retroalimentación descriptiva individual y grupal. Se brindará apoyo guiado adicional a estudiantes que muestren dificultad para identificar normas de seguridad en el hogar.
+                </p>
+            </div>
+        </section>
+
+        <!-- 8. INSTRUMENTO DE EVALUACIÓN (Lista de Cotejo Interactiva) -->
+        <section class="bg-white rounded-2xl shadow-md p-6 border-t-4 border-montanoSecondary">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
+                <h2 class="text-xl font-bold text-montanoPrimary flex items-center">
+                    <span class="bg-montanoSecondary text-white w-7 h-7 rounded-full inline-flex items-center justify-center text-sm mr-2 shadow">8</span>
+                    Instrumento de Evaluación (Lista de Cotejo)
+                </h2>
+                <div class="mt-2 sm:mt-0 bg-montanoPrimary text-white px-4 py-1.5 rounded-lg text-sm font-semibold shadow">
+                    Puntuación Calculada: <span id="score-display">0</span> / 4 Puntos
+                </div>
+            </div>
+            <p class="text-xs text-slate-500 mb-4">Marque los criterios cumplidos para calcular automáticamente la calificación formativa del producto.</p>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left border border-slate-200 rounded-xl overflow-hidden">
+                    <thead class="bg-montanoPrimary text-white">
+                        <tr>
+                            <th class="p-3">Criterio de Evaluación</th>
+                            <th class="p-3 text-center w-28">Cumple (1 pt)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200">
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-3 text-slate-700">1. Identifica claramente las acciones de orden y limpieza necesarias en el hogar.</td>
+                            <td class="p-3 text-center">
+                                <input type="checkbox" class="cotejo-checkbox w-5 h-5 text-montanoPrimary rounded focus:ring-montanoSecondary cursor-pointer" onchange="calcularPuntuacion()">
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-3 text-slate-700">2. Elabora un plan personal con al menos tres acciones prácticas de cuidado en casa.</td>
+                            <td class="p-3 text-center">
+                                <input type="checkbox" class="cotejo-checkbox w-5 h-5 text-montanoPrimary rounded focus:ring-montanoSecondary cursor-pointer" onchange="calcularPuntuacion()">
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-3 text-slate-700">3. Colabora activamente y demuestra respeto con su pareja durante la actividad grupal.</td>
+                            <td class="p-3 text-center">
+                                <input type="checkbox" class="cotejo-checkbox w-5 h-5 text-montanoPrimary rounded focus:ring-montanoSecondary cursor-pointer" onchange="calcularPuntuacion()">
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-3 text-slate-700">4. Presenta sus evidencias de forma limpia, ordenada y concluye a tiempo.</td>
+                            <td class="p-3 text-center">
+                                <input type="checkbox" class="cotejo-checkbox w-5 h-5 text-montanoPrimary rounded focus:ring-montanoSecondary cursor-pointer" onchange="calcularPuntuacion()">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 9. OBSERVACIONES Y REFLEXIÓN DOCENTE -->
+        <section class="bg-white rounded-2xl shadow-md p-6 border-t-4 border-montanoPrimary">
+            <h2 class="text-xl font-bold text-montanoPrimary mb-4 flex items-center">
+                <span class="bg-montanoPrimary text-montanoAccent w-7 h-7 rounded-full inline-flex items-center justify-center text-sm mr-2 shadow">9</span>
+                Observaciones y Reflexión Docente
+            </h2>
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <label for="obs-docente" class="block text-xs font-semibold text-montanoSecondary mb-2 uppercase tracking-wide">Espacio editable para notas, incidencias y mejoras de la sesión:</label>
+                <textarea id="obs-docente" rows="4" class="w-full bg-white p-3 rounded-lg border border-slate-300 text-slate-700 text-sm focus:ring-2 focus:ring-montanoPrimary focus:outline-none" placeholder="Escriba aquí sus observaciones posteriores a la clase..."></textarea>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Institucional -->
+    <footer class="bg-montanoPrimary text-white mt-12 py-6 no-print">
+        <div class="max-w-7xl mx-auto px-4 text-center text-sm">
+            <p>Colegio Montano — Excelencia Educativa y Formación por Competencias © 2027</p>
+            <p class="text-xs text-slate-300 mt-1">Modalidad Presencial | Sistema Interactivo Institucional</p>
+        </div>
+    </footer>
+
+    <!-- Scripts de Interactividad y Almacenamiento -->
+    <script>
+        // Navegación por pestañas didácticas
+        function cambiarMomento(momentoId) {
+            const momentos = ['im', 'tp', 'tc', 'p'];
+            momentos.forEach(m => {
+                const panel = document.getElementById(`momento-${m}`);
+                const btn = document.getElementById(`tab-btn-${m}`);
+                if (m === momentoId) {
+                    panel.classList.remove('hidden');
+                    btn.className = "p-3 rounded-xl font-semibold text-sm transition text-center border-2 border-montanoPrimary bg-montanoPrimary text-white shadow";
+                } else {
+                    panel.classList.add('hidden');
+                    btn.className = "p-3 rounded-xl font-semibold text-sm transition text-center border-2 border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100";
+                }
+            });
+        }
+
+        // Cálculo de puntuación de la lista de cotejo
+        function calcularPuntuacion() {
+            const checkboxes = document.querySelectorAll('.cotejo-checkbox');
+            let count = 0;
+            checkboxes.forEach(cb => {
+                if (cb.checked) count++;
+            });
+            document.getElementById('score-display').innerText = count;
+        }
+
+        // Guardar en LocalStorage
+        function guardarDatos() {
+            const data = {
+                colegio: document.getElementById('d-colegio').innerText,
+                modalidad: document.getElementById('d-modalidad').innerText,
+                materia: document.getElementById('d-materia').innerText,
+                tema: document.getElementById('d-tema').innerText,
+                grado: document.getElementById('d-grado').innerText,
+                unidad: document.getElementById('d-unidad').innerText,
+                numplan: document.getElementById('d-numplan').innerText,
+                fecha: document.getElementById('d-fecha').innerText,
+                docente: document.getElementById('d-docente').innerText,
+                duracion: document.getElementById('d-duracion').innerText,
+                competencia: document.getElementById('c-competencia').innerText,
+                logro: document.getElementById('c-logro').innerText,
+                claves: document.getElementById('c-claves').innerText,
+                blandas: document.getElementById('c-blandas').innerText,
+                habito1: document.getElementById('h-habito1').innerText,
+                habito2: document.getElementById('h-habito2').innerText,
+                imNombre: document.getElementById('im-nombre').innerText,
+                imProposito: document.getElementById('im-proposito').innerText,
+                imInstrucciones: document.getElementById('im-instrucciones').innerHTML,
+                imRecursos: document.getElementById('im-recursos').innerText,
+                imEvidencia: document.getElementById('im-evidencia').innerText,
+                imHabito: document.getElementById('im-habito').innerText,
+                tpProposito: document.getElementById('tp-proposito').innerText,
+                tpProducto: document.getElementById('tp-producto').innerText,
+                tpInstrucciones: document.getElementById('tp-instrucciones').innerHTML,
+                tpRecursos: document.getElementById('tp-recursos').innerText,
+                tpSeguimiento: document.getElementById('tp-seguimiento').innerText,
+                tcProposito: document.getElementById('tc-proposito').innerText,
+                tcProducto: document.getElementById('tc-producto').innerText,
+                tcInstrucciones: document.getElementById('tc-instrucciones').innerHTML,
+                tcRecursos: document.getElementById('tc-recursos').innerText,
+                tcCriterios: document.getElementById('tc-criterios').innerText,
+                pProposito: document.getElementById('p-proposito').innerText,
+                pEvidencia: document.getElementById('p-evidencia').innerText,
+                pInstrucciones: document.getElementById('p-instrucciones').innerHTML,
+                pRecursos: document.getElementById('p-recursos').innerText,
+                pVerificacion: document.getElementById('p-verificacion').innerText,
+                recursosLista: document.getElementById('lista-recursos').innerHTML,
+                evalInicial: document.getElementById('eval-inicial').innerText,
+                evalFormativa: document.getElementById('eval-formativa').innerText,
+                evalSumativa: document.getElementById('eval-sumativa').innerText,
+                evalRetro: document.getElementById('eval-retro').innerText,
+                obsDocente: document.getElementById('obs-docente').value
+            };
+            localStorage.setItem('montano_plan_clase_ hogar_data', JSON.stringify(data));
+            
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<svg class="w-4 h-4 mr-1.5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> ¡Guardado!`;
+            btn.classList.add('bg-green-600');
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.classList.remove('bg-green-600');
+            }, 2000);
+        }
+
+        // Cargar datos de LocalStorage al iniciar
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('montano_plan_clase_ hogar_data');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    if(data.colegio) document.getElementById('d-colegio').innerText = data.colegio;
+                    if(data.modalidad) document.getElementById('d-modalidad').innerText = data.modalidad;
+                    if(data.materia) document.getElementById('d-materia').innerText = data.materia;
+                    if(data.tema) document.getElementById('d-tema').innerText = data.tema;
+                    if(data.grado) document.getElementById('d-grado').innerText = data.grado;
+                    if(data.unidad) document.getElementById('d-unidad').innerText = data.unidad;
+                    if(data.numplan) document.getElementById('d-numplan').innerText = data.numplan;
+                    if(data.fecha) document.getElementById('d-fecha').innerText = data.fecha;
+                    if(data.docente) document.getElementById('d-docente').innerText = data.docente;
+                    if(data.duracion) document.getElementById('d-duracion').innerText = data.duracion;
+                    if(data.competencia) document.getElementById('c-competencia').innerText = data.competencia;
+                    if(data.logro) document.getElementById('c-logro').innerText = data.logro;
+                    if(data.claves) document.getElementById('c-claves').innerText = data.claves;
+                    if(data.blandas) document.getElementById('c-blandas').innerText = data.blandas;
+                    if(data.habito1) document.getElementById('h-habito1').innerText = data.habito1;
+                    if(data.habito2) document.getElementById('h-habito2').innerText = data.habito2;
+                    if(data.imNombre) document.getElementById('im-nombre').innerText = data.imNombre;
+                    if(data.imProposito) document.getElementById('im-proposito').innerText = data.imProposito;
+                    if(data.imInstrucciones) document.getElementById('im-instrucciones').innerHTML = data.imInstrucciones;
+                    if(data.imRecursos) document.getElementById('im-recursos').innerText = data.imRecursos;
+                    if(data.imEvidencia) document.getElementById('im-evidencia').innerText = data.imEvidencia;
+                    if(data.imHabito) document.getElementById('im-habito').innerText = data.imHabito;
+                    if(data.tpProposito) document.getElementById('tp-proposito').innerText = data.tpProposito;
+                    if(data.tpProducto) document.getElementById('tp-producto').innerText = data.tpProducto;
+                    if(data.tpInstrucciones) document.getElementById('tp-instrucciones').innerHTML = data.tpInstrucciones;
+                    if(data.tpRecursos) document.getElementById('tp-recursos').innerText = data.tpRecursos;
+                    if(data.tpSeguimiento) document.getElementById('tp-seguimiento').innerText = data.tpSeguimiento;
+                    if(data.tcProposito) document.getElementById('tc-proposito').innerText = data.tcProposito;
+                    if(data.tcProducto) document.getElementById('tc-producto').innerText = data.tcProducto;
+                    if(data.tcInstrucciones) document.getElementById('tc-instrucciones').innerHTML = data.tcInstrucciones;
+                    if(data.tcRecursos) document.getElementById('tc-recursos').innerText = data.tcRecursos;
+                    if(data.tcCriterios) document.getElementById('tc-criterios').innerText = data.tcCriterios;
+                    if(data.pProposito) document.getElementById('p-proposito').innerText = data.pProposito;
+                    if(data.pEvidencia) document.getElementById('p-evidencia').innerText = data.pEvidencia;
+                    if(data.pInstrucciones) document.getElementById('p-instrucciones').innerHTML = data.pInstrucciones;
+                    if(data.pRecursos) document.getElementById('p-recursos').innerText = data.pRecursos;
+                    if(data.pVerificacion) document.getElementById('p-verificacion').innerText = data.pVerificacion;
+                    if(data.recursosLista) document.getElementById('lista-recursos').innerHTML = data.recursosLista;
+                    if(data.evalInicial) document.getElementById('eval-inicial').innerText = data.evalInicial;
+                    if(data.evalFormativa) document.getElementById('eval-formativa').innerText = data.evalFormativa;
+                    if(data.evalSumativa) document.getElementById('eval-sumativa').innerText = data.evalSumativa;
+                    if(data.evalRetro) document.getElementById('eval-retro').innerText = data.evalRetro;
+                    if(data.obsDocente) document.getElementById('obs-docente').value = data.obsDocente;
+                } catch(e) {
+                    console.error("Error al cargar datos guardados:", e);
+                }
+            }
+        });
+
+        // Restablecer con confirmación personalizada
+        function resetearDatos() {
+            if (window.confirm("¿Está seguro de que desea restablecer todos los campos a sus valores originales? Se perderán los cambios guardados.")) {
+                localStorage.removeItem('montano_plan_clase_ hogar_data');
+                window.location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
